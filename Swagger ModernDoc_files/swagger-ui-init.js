@@ -1,0 +1,1942 @@
+
+window.onload = function() {
+  // Build a system
+  var url = window.location.search.match(/url=([^&]+)/);
+  if (url && url.length > 1) {
+    url = decodeURIComponent(url[1]);
+  } else {
+    url = window.location.origin;
+  }
+  var options = {
+  "swaggerDoc": {
+    "openapi": "3.0.0",
+    "info": {
+      "title": "ModernDoc API",
+      "description": "API endpoint for ModernDoc"
+    },
+    "servers": [
+      {
+        "url": "http://localhost:8080",
+        "description": "ModernDoc API"
+      }
+    ],
+    "tags": [
+      {
+        "name": "User",
+        "description": "User management"
+      },
+      {
+        "name": "Tag",
+        "description": "Tag management"
+      },
+      {
+        "name": "Field",
+        "description": "Field management"
+      },
+      {
+        "name": "GeneratedFile",
+        "description": "GeneratedFile management"
+      }
+    ],
+    "paths": {
+      "/user": {
+        "post": {
+          "tags": [
+            "User"
+          ],
+          "summary": "Create a new user",
+          "operationId": "createUser",
+          "requestBody": {
+            "description": "User object that needs to be added",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "title": {
+                      "type": "string",
+                      "description": "User's title"
+                    },
+                    "firstName": {
+                      "type": "string",
+                      "description": "User's first name"
+                    },
+                    "lastName": {
+                      "type": "string",
+                      "description": "User's last name"
+                    },
+                    "sex": {
+                      "type": "string",
+                      "description": "m,f"
+                    },
+                    "birthDate": {
+                      "type": "string",
+                      "description": "User's birth date ISO String"
+                    },
+                    "citizenId": {
+                      "type": "string",
+                      "description": "User's citizen id"
+                    },
+                    "phoneNumber": {
+                      "type": "string",
+                      "description": "User's phone number"
+                    },
+                    "password": {
+                      "type": "string",
+                      "description": "User's password"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "User created"
+            },
+            "400": {
+              "description": "Invalid input"
+            }
+          }
+        }
+      },
+      "/user/citizenId-status/{citizenId}": {
+        "get": {
+          "tags": [
+            "User"
+          ],
+          "summary": "Check if citizen id is available",
+          "operationId": "checkCitizenId",
+          "parameters": [
+            {
+              "name": "citizenId",
+              "in": "path",
+              "description": "Citizen id to check",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Citizen id available"
+            },
+            "400": {
+              "description": "Citizen ID is not valid"
+            },
+            "409": {
+              "description": "Citizen id already exists"
+            }
+          }
+        }
+      },
+      "/user/login": {
+        "post": {
+          "tags": [
+            "User"
+          ],
+          "summary": "Login user",
+          "operationId": "loginUser",
+          "requestBody": {
+            "description": "User object that needs to be added",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "phoneNumber": {
+                      "type": "string",
+                      "description": "User's phone number"
+                    },
+                    "password": {
+                      "type": "string",
+                      "description": "User's password"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "User logged in"
+            },
+            "400": {
+              "description": "User not found"
+            },
+            "403": {
+              "description": "Wrong Password"
+            }
+          }
+        }
+      },
+      "/user/switch-memeber": {
+        "post": {
+          "tags": [
+            "User"
+          ],
+          "summary": "Switch member",
+          "operationId": "switchMember",
+          "requestBody": {
+            "description": "User object that needs to be added",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "userId": {
+                      "type": "string",
+                      "description": "User's id"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "User switched"
+            },
+            "400": {
+              "description": "Error switching user"
+            },
+            "404": {
+              "description": "User not found"
+            }
+          }
+        }
+      },
+      "/user/edit-profile": {
+        "put": {
+          "tags": [
+            "User"
+          ],
+          "summary": "Edit user profile",
+          "operationId": "editProfile",
+          "parameters": [
+            {
+              "name": "user-id",
+              "in": "headers",
+              "description": "User's id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "description": "User object that needs to be edited",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "title": {
+                      "type": "string",
+                      "description": "User's title"
+                    },
+                    "firstName": {
+                      "type": "string",
+                      "description": "User's first name"
+                    },
+                    "lastName": {
+                      "type": "string",
+                      "description": "User's last name"
+                    },
+                    "sex": {
+                      "type": "string",
+                      "description": "ชาย,หญิง"
+                    },
+                    "birthDate": {
+                      "type": "string",
+                      "description": "User's birth date ISO String"
+                    },
+                    "profileURI": {
+                      "type": "string",
+                      "description": "User's profile Image URI"
+                    },
+                    "password": {
+                      "type": "string",
+                      "description": "User's password to verify"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "User edited"
+            },
+            "400": {
+              "description": "Error editing user"
+            },
+            "404": {
+              "description": "User not found"
+            }
+          }
+        }
+      },
+      "/user/get-folders/{userId}": {
+        "get": {
+          "tags": [
+            "User"
+          ],
+          "summary": "Get user's folders",
+          "operationId": "getFolders",
+          "parameters": [
+            {
+              "name": "user-id",
+              "in": "headers",
+              "description": "User's id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "description": "User object that needs to be edited",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "userId": {
+                      "type": "string",
+                      "description": "User's id"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Folders retrieved"
+            },
+            "400": {
+              "description": "Error retrieving folders"
+            }
+          }
+        }
+      },
+      "/user/get-files/{userId}": {
+        "get": {
+          "tags": [
+            "User"
+          ],
+          "summary": "Get user's files",
+          "operationId": "getFiles",
+          "parameters": [
+            {
+              "name": "user-id",
+              "in": "headers",
+              "description": "User's id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "description": "User object that needs to be edited",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "userId": {
+                      "type": "string",
+                      "description": "User's id"
+                    }
+                  }
+                }
+              }
+            },
+            "responses": {
+              "200": {
+                "description": "files retrieved"
+              },
+              "400": {
+                "description": "Error retrieving folders"
+              }
+            }
+          }
+        }
+      },
+      "/user/change-password": {
+        "post": {
+          "tags": [
+            "User"
+          ],
+          "summary": "Change user password",
+          "operationId": "changePassword",
+          "parameters": [
+            {
+              "name": "user-id",
+              "in": "headers",
+              "description": "User's id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "description": "User object that needs to be edited",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "oldPassword": {
+                      "type": "string",
+                      "description": "User's old password"
+                    },
+                    "newPassword": {
+                      "type": "string",
+                      "description": "User's new password"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Password changed"
+            },
+            "400": {
+              "description": "Error changing password"
+            },
+            "404": {
+              "description": "User not found"
+            }
+          }
+        }
+      },
+      "/tag/create": {
+        "post": {
+          "tags": [
+            "Tag"
+          ],
+          "summary": "Create a new tag",
+          "operationId": "createTag",
+          "requestBody": {
+            "description": "Tag object that needs to be added",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "Tag's name"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Tag created"
+            },
+            "500": {
+              "description": "Tag creation failed"
+            }
+          }
+        }
+      },
+      "/tag/get-all": {
+        "get": {
+          "tags": [
+            "Tag"
+          ],
+          "summary": "Get all tags",
+          "operationId": "getTags",
+          "responses": {
+            "200": {
+              "description": "Tags retrieved"
+            },
+            "500": {
+              "description": "Tags retrieval failed"
+            }
+          }
+        }
+      },
+      "/tag/name/{name}": {
+        "get": {
+          "tags": [
+            "Tag"
+          ],
+          "summary": "Get tag by name",
+          "operationId": "getTagByName",
+          "parameters": [
+            {
+              "name": "name",
+              "in": "path",
+              "description": "Tag's name",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Tag retrieved"
+            },
+            "500": {
+              "description": "Tag retrieval failed"
+            }
+          }
+        }
+      },
+      "/tag/id/{id}": {
+        "get": {
+          "tags": [
+            "Tag"
+          ],
+          "summary": "Get tag by id",
+          "operationId": "getTagById",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "description": "Tag's id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Tag retrieved"
+            },
+            "500": {
+              "description": "Tag retrieval failed"
+            }
+          }
+        }
+      },
+      "/tag/edit-name": {
+        "put": {
+          "tags": [
+            "Tag"
+          ],
+          "summary": "Edit tag's name",
+          "operationId": "editTagName",
+          "requestBody": {
+            "description": "Tag object that needs to be edited",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "description": "Tag's id"
+                    },
+                    "name": {
+                      "type": "string",
+                      "description": "Tag's name"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Tag edited"
+            },
+            "500": {
+              "description": "Tag edit failed"
+            }
+          }
+        }
+      },
+      "/field/create": {
+        "post": {
+          "tags": [
+            "Field"
+          ],
+          "summary": "Create a new field",
+          "operationId": "createField",
+          "requestBody": {
+            "description": "Field object that needs to be added",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "Field's name"
+                    },
+                    "officialName": {
+                      "type": "string",
+                      "description": "Field's official name"
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "Field's description"
+                    },
+                    "type": {
+                      "type": "string",
+                      "description": "text,number,date,singleSelect,multipleSelect"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Field created"
+            },
+            "500": {
+              "description": "Field creation failed"
+            }
+          }
+        }
+      },
+      "/field/get-all": {
+        "get": {
+          "tags": [
+            "Field"
+          ],
+          "summary": "Get all fields",
+          "operationId": "getFields",
+          "responses": {
+            "200": {
+              "description": "Fields retrieved"
+            },
+            "500": {
+              "description": "Fields retrieval failed"
+            }
+          }
+        }
+      },
+      "/field/edit-official-name": {
+        "put": {
+          "tags": [
+            "Field"
+          ],
+          "summary": "Edit field's official name",
+          "operationId": "editFieldOfficialName",
+          "requestBody": {
+            "description": "Field object that needs to be edited",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "description": "Field's id"
+                    },
+                    "officialName": {
+                      "type": "string",
+                      "description": "Field's official name"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Field edited"
+            },
+            "500": {
+              "description": "Field edit failed"
+            }
+          }
+        }
+      },
+      "/field/add-choice": {
+        "post": {
+          "tags": [
+            "Field"
+          ],
+          "summary": "Add choice to field",
+          "operationId": "addChoiceToField",
+          "requestBody": {
+            "description": "Field object that needs to be edited",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "fieldId": {
+                      "type": "string",
+                      "description": "Field's id"
+                    },
+                    "name": {
+                      "type": "string",
+                      "description": "Choice's name"
+                    },
+                    "officialName": {
+                      "type": "string",
+                      "description": "Choice's official name"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Choice added"
+            },
+            "500": {
+              "description": "Choice add failed"
+            }
+          }
+        }
+      },
+      "/field/delete-choice/{choiceId}": {
+        "delete": {
+          "tags": [
+            "Field"
+          ],
+          "summary": "Delete choice from field",
+          "operationId": "deleteChoiceFromField",
+          "parameters": [
+            {
+              "name": "choiceId",
+              "in": "path",
+              "description": "Choice's id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Choice deleted"
+            },
+            "500": {
+              "description": "Choice delete failed"
+            }
+          }
+        }
+      },
+      "/file/get-by-id/{type}/{id}": {
+        "get": {
+          "tags": [
+            "File"
+          ],
+          "summary": "Get file by id",
+          "operationId": "getFileById",
+          "parameters": [
+            {
+              "name": "type",
+              "in": "path",
+              "description": "file or folder",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "id",
+              "in": "path",
+              "description": "File's id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "user-id",
+              "in": "headers",
+              "description": "User's id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "File retrieved"
+            },
+            "500": {
+              "description": "File retrieval failed"
+            }
+          }
+        }
+      },
+      "/file/latest-files/{type}": {
+        "get": {
+          "tags": [
+            "File"
+          ],
+          "summary": "Get latest files",
+          "operationId": "getLatestFiles",
+          "parameters": [
+            {
+              "name": "user-id",
+              "in": "headers",
+              "description": "User's id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Files retrieved"
+            },
+            "500": {
+              "description": "Files retrieval failed"
+            }
+          }
+        }
+      },
+      "/file/search/{name}": {
+        "get": {
+          "tags": [
+            "File"
+          ],
+          "summary": "Search files",
+          "operationId": "searchFiles",
+          "parameters": [
+            {
+              "name": "name",
+              "in": "path",
+              "description": "File's name",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "user-id",
+              "in": "headers",
+              "description": "User's id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Files retrieved"
+            },
+            "500": {
+              "description": "Files retrieval failed"
+            }
+          }
+        }
+      },
+      "/file/search": {
+        "get": {
+          "tags": [
+            "File"
+          ],
+          "summary": "get all files",
+          "operationId": "getAllFiles",
+          "parameters": [
+            {
+              "name": "user-id",
+              "in": "headers",
+              "description": "User's id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Files retrieved"
+            },
+            "500": {
+              "description": "Files retrieval failed"
+            }
+          }
+        }
+      },
+      "/file/new/generatedFile/{fileId}": {
+        "post": {
+          "tags": [
+            "File"
+          ],
+          "summary": "create generated file",
+          "operationId": "createGeneratedFile",
+          "parameters": [
+            {
+              "name": "fileId",
+              "in": "path",
+              "description": "File's id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "user-id",
+              "in": "headers",
+              "description": "User's id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "description": "File object that needs to be edited",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "fields": {
+                      "type": "array",
+                      "description": "Fields",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "Field's id"
+                          },
+                          "name": {
+                            "type": "string",
+                            "description": "Field's name"
+                          },
+                          "userValue": {
+                            "type": "string",
+                            "description": "Field's user value"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "File uploaded"
+            },
+            "400": {
+              "description": "File upload failed"
+            }
+          }
+        }
+      },
+      "/file/new/uploadedFile/{fileId}": {
+        "post": {
+          "tags": [
+            "File"
+          ],
+          "summary": "add uploaded file",
+          "operationId": "addUploadedFile",
+          "parameters": [
+            {
+              "name": "fileId",
+              "in": "path",
+              "description": "File's id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "user-id",
+              "in": "headers",
+              "description": "User's id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "description": "File object that needs to be edited",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "URI": {
+                      "type": "string",
+                      "description": "File's URI"
+                    },
+                    "note": {
+                      "type": "string",
+                      "description": "File's note"
+                    },
+                    "expiredDate": {
+                      "type": "string",
+                      "description": "File's expired date"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "File uploaded"
+            },
+            "400": {
+              "description": "File upload failed"
+            }
+          }
+        }
+      },
+      "/file/add-note/{type}/{fileId}": {
+        "put": {
+          "tags": [
+            "File"
+          ],
+          "summary": "add note to file",
+          "operationId": "addNoteToFile",
+          "parameters": [
+            {
+              "name": "type",
+              "in": "path",
+              "description": "file or folder",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "fileId",
+              "in": "path",
+              "description": "File's id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "user-id",
+              "in": "headers",
+              "description": "User's id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "description": "File object that needs to be edited",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "note": {
+                      "type": "string",
+                      "description": "File's note"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Note added"
+            },
+            "400": {
+              "description": "Note add failed"
+            }
+          }
+        }
+      },
+      "/file/share/{type}/{fileId}": {
+        "put": {
+          "tags": [
+            "File"
+          ],
+          "summary": "share file",
+          "operationId": "shareFile",
+          "parameters": [
+            {
+              "name": "type",
+              "in": "path",
+              "description": "file or folder",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "fileId",
+              "in": "path",
+              "description": "File's id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "user-id",
+              "in": "headers",
+              "description": "User's id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "File shared"
+            },
+            "400": {
+              "description": "File share failed"
+            }
+          }
+        }
+      },
+      "/file/unshare/{type}/{fileId}": {
+        "put": {
+          "tags": [
+            "File"
+          ],
+          "summary": "unshare file",
+          "operationId": "unshareFile",
+          "parameters": [
+            {
+              "name": "type",
+              "in": "path",
+              "description": "file or folder",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "fileId",
+              "in": "path",
+              "description": "File's id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "user-id",
+              "in": "headers",
+              "description": "User's id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "File unshared"
+            },
+            "400": {
+              "description": "File unshare failed"
+            }
+          }
+        }
+      },
+      "/file/new/userFreeUploadFile": {
+        "post": {
+          "tags": [
+            "File"
+          ],
+          "summary": "add user free upload file",
+          "operationId": "addUserFreeUploadFile",
+          "parameters": [
+            {
+              "name": "user-id",
+              "in": "headers",
+              "description": "User's id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "description": "File object that needs to be added",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "officialName": {
+                      "type": "string",
+                      "description": "File's officialName"
+                    },
+                    "URI": {
+                      "type": "string",
+                      "description": "File's URI"
+                    },
+                    "note": {
+                      "type": "string",
+                      "description": "File's note"
+                    },
+                    "expirationDate": {
+                      "type": "string",
+                      "description": "File's expirationDate"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "File added"
+            },
+            "400": {
+              "description": "File add failed"
+            }
+          }
+        }
+      },
+      "/folder/get-by-id/{id}": {
+        "get": {
+          "tags": [
+            "Folder"
+          ],
+          "summary": "Get folder by id",
+          "operationId": "getFolderById",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "description": "Folder's id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "user-id",
+              "in": "headers",
+              "description": "User's id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Folder retrieved"
+            },
+            "400": {
+              "description": "Folder retrieval failed"
+            }
+          }
+        }
+      },
+      "/folder/latest-folders": {
+        "get": {
+          "tags": [
+            "Folder"
+          ],
+          "summary": "Get latest folders",
+          "operationId": "getLatestFolders",
+          "parameters": [
+            {
+              "name": "user-id",
+              "in": "headers",
+              "description": "User's id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Folders retrieved"
+            },
+            "400": {
+              "description": "Folders retrieval failed"
+            }
+          }
+        }
+      },
+      "/folder/search/{name}": {
+        "get": {
+          "tags": [
+            "Folder"
+          ],
+          "summary": "Search folder by name",
+          "operationId": "searchFolderByName",
+          "parameters": [
+            {
+              "name": "name",
+              "in": "path",
+              "description": "Folder's name",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "user-id",
+              "in": "headers",
+              "description": "User's id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Folder retrieved"
+            },
+            "400": {
+              "description": "Folder retrieval failed"
+            }
+          }
+        }
+      },
+      "/folder/search": {
+        "get": {
+          "tags": [
+            "Folder"
+          ],
+          "summary": "get all folders",
+          "operationId": "getAllFolders",
+          "parameters": [
+            {
+              "name": "user-id",
+              "in": "headers",
+              "description": "User's id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Folder retrieved"
+            },
+            "400": {
+              "description": "Folder retrieval failed"
+            }
+          }
+        }
+      },
+      "/folder/new/{folderId}": {
+        "post": {
+          "tags": [
+            "Folder"
+          ],
+          "summary": "add folder",
+          "operationId": "addFolder",
+          "parameters": [
+            {
+              "name": "folderId",
+              "in": "path",
+              "description": "Folder's id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "user-id",
+              "in": "headers",
+              "description": "User's id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "description": "Folder object that needs to be added",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "fields": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "Field's id"
+                          },
+                          "userValue": {
+                            "type": "string",
+                            "description": "Field's userValue"
+                          }
+                        }
+                      }
+                    },
+                    "generatedFiles": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "GeneratedFile's id"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Folder added"
+            },
+            "400": {
+              "description": "Folder add failed"
+            }
+          }
+        }
+      },
+      "/folder/add-note/{userFolderId}": {
+        "put": {
+          "tags": [
+            "Folder"
+          ],
+          "summary": "add note to folder",
+          "operationId": "addNoteToFolder",
+          "parameters": [
+            {
+              "name": "userFolderId",
+              "in": "path",
+              "description": "Folder's id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "user-id",
+              "in": "headers",
+              "description": "User's id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "description": "Folder object that needs to be edited",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "note": {
+                      "type": "string",
+                      "description": "Folder's note"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Note added"
+            },
+            "400": {
+              "description": "Note add failed"
+            }
+          }
+        }
+      },
+      "/folder/get-field": {
+        "get": {
+          "tags": [
+            "Folder"
+          ],
+          "summary": "get all fields",
+          "operationId": "getAllFields",
+          "parameters": [
+            {
+              "name": "user-id",
+              "in": "headers",
+              "description": "User's id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "generated-file-ids",
+              "in": "headers",
+              "description": "GeneratedFile's ids in JSON Stringified array",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Fields retrieved"
+            },
+            "400": {
+              "description": "Fields retrieval failed"
+            }
+          }
+        }
+      },
+      "/note/add": {
+        "post": {
+          "tags": [
+            "Note"
+          ],
+          "summary": "add free note",
+          "operationId": "addFreeNote",
+          "parameters": [
+            {
+              "name": "user-id",
+              "in": "headers",
+              "description": "User's id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "description": "Note object that needs to be added",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "heading": {
+                      "type": "string",
+                      "description": "Note's heading"
+                    },
+                    "content": {
+                      "type": "string",
+                      "description": "Note's content"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Note added"
+            },
+            "400": {
+              "description": "Note add failed"
+            }
+          }
+        }
+      },
+      "/note/edit/{noteId}": {
+        "put": {
+          "tags": [
+            "Note"
+          ],
+          "summary": "edit free note",
+          "operationId": "editFreeNote",
+          "parameters": [
+            {
+              "name": "noteId",
+              "in": "path",
+              "description": "Note's id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "user-id",
+              "in": "headers",
+              "description": "User's id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "description": "Note object that needs to be edited",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "content": {
+                      "type": "string",
+                      "description": "Note's content"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Note edited"
+            },
+            "400": {
+              "description": "Note edit failed"
+            }
+          }
+        }
+      },
+      "/note/delete/{noteId}": {
+        "delete": {
+          "tags": [
+            "Note"
+          ],
+          "summary": "delete free note",
+          "operationId": "deleteFreeNote",
+          "parameters": [
+            {
+              "name": "noteId",
+              "in": "path",
+              "description": "Note's id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "user-id",
+              "in": "headers",
+              "description": "User's id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Note deleted"
+            },
+            "400": {
+              "description": "Note delete failed"
+            }
+          }
+        }
+      },
+      "/note/all": {
+        "get": {
+          "tags": [
+            "Note"
+          ],
+          "summary": "get all free notes",
+          "operationId": "getAllFreeNotes",
+          "parameters": [
+            {
+              "name": "user-id",
+              "in": "headers",
+              "description": "User's id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Notes retrieved"
+            },
+            "400": {
+              "description": "Notes retrieval failed"
+            }
+          }
+        }
+      },
+      "/member": {
+        "get": {
+          "tags": [
+            "Member"
+          ],
+          "summary": "get all members",
+          "operationId": "getAllMembers",
+          "parameters": [
+            {
+              "name": "user-id",
+              "in": "headers",
+              "description": "User's id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Members retrieved"
+            },
+            "400": {
+              "description": "Members retrieval failed"
+            }
+          }
+        },
+        "post": {
+          "tags": [
+            "Member"
+          ],
+          "summary": "add member",
+          "operationId": "addMember",
+          "parameters": [
+            {
+              "name": "user-id",
+              "in": "headers",
+              "description": "User's id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "description": "Member object that needs to be added",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "householdId": {
+                      "type": "string",
+                      "description": "householdId"
+                    },
+                    "title": {
+                      "type": "string",
+                      "description": "Member's title"
+                    },
+                    "firstName": {
+                      "type": "string",
+                      "description": "Member's firstName"
+                    },
+                    "lastName": {
+                      "type": "string",
+                      "description": "Member's lastName"
+                    },
+                    "citizenId": {
+                      "type": "string",
+                      "description": "Member's citizenId"
+                    },
+                    "relationship": {
+                      "type": "string",
+                      "description": "Member's relationship"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Member added"
+            },
+            "400": {
+              "description": "Member add failed"
+            }
+          }
+        }
+      },
+      "/member/{id}": {
+        "put": {
+          "tags": [
+            "Member"
+          ],
+          "summary": "edit member",
+          "operationId": "editMember",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "description": "Member's id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "user-id",
+              "in": "headers",
+              "description": "User's id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "description": "Member object that needs to be edited",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "title": {
+                      "type": "string",
+                      "description": "Member's title"
+                    },
+                    "firstName": {
+                      "type": "string",
+                      "description": "Member's firstName"
+                    },
+                    "lastName": {
+                      "type": "string",
+                      "description": "Member's lastName"
+                    },
+                    "relationship": {
+                      "type": "string",
+                      "description": "Member's relationship"
+                    },
+                    "profileURI": {
+                      "type": "string",
+                      "description": "Member's profile image URI"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Member edited"
+            },
+            "400": {
+              "description": "Member edit failed"
+            }
+          }
+        },
+        "delete": {
+          "tags": [
+            "Member"
+          ],
+          "summary": "delete member",
+          "operationId": "deleteMember",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "description": "Member's id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "user-id",
+              "in": "headers",
+              "description": "User's id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Member deleted"
+            },
+            "400": {
+              "description": "Member delete failed"
+            }
+          }
+        }
+      },
+      "/member/available-uploadedFile/{fileId}": {
+        "get": {
+          "tags": [
+            "Member"
+          ],
+          "summary": "get all members that have uploaded file",
+          "operationId": "getAllMembersThatHaveUploadedFile",
+          "parameters": [
+            {
+              "name": "fileId",
+              "in": "path",
+              "description": "UploadedFile's id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "user-id",
+              "in": "headers",
+              "description": "User's id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Members retrieved"
+            },
+            "400": {
+              "description": "Members retrieval failed"
+            }
+          }
+        }
+      }
+    }
+  },
+  "customOptions": {}
+};
+  url = options.swaggerUrl || url
+  var urls = options.swaggerUrls
+  var customOptions = options.customOptions
+  var spec1 = options.swaggerDoc
+  var swaggerOptions = {
+    spec: spec1,
+    url: url,
+    urls: urls,
+    dom_id: '#swagger-ui',
+    deepLinking: true,
+    presets: [
+      SwaggerUIBundle.presets.apis,
+      SwaggerUIStandalonePreset
+    ],
+    plugins: [
+      SwaggerUIBundle.plugins.DownloadUrl
+    ],
+    layout: "StandaloneLayout"
+  }
+  for (var attrname in customOptions) {
+    swaggerOptions[attrname] = customOptions[attrname];
+  }
+  var ui = SwaggerUIBundle(swaggerOptions)
+
+  if (customOptions.oauth) {
+    ui.initOAuth(customOptions.oauth)
+  }
+
+  if (customOptions.authAction) {
+    ui.authActions.authorize(customOptions.authAction)
+  }
+
+  window.ui = ui
+}
